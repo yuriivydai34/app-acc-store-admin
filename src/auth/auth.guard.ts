@@ -9,7 +9,7 @@ import { JwtService } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
 import { Request } from 'express';
 import { Reflector } from '@nestjs/core';
-import { IS_PUBLIC_KEY } from './decorator';
+import { IS_PUBLIC_KEY } from './decorators/public.decorator';
 
 
 @Injectable()

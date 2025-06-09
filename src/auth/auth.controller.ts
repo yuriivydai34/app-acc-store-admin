@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
-import { Public } from './decorator';
+import { Public } from './decorators/public.decorator';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { SignInDto } from './dto/signin.dto';
 
