@@ -29,6 +29,7 @@ import { File } from './files/entities/file.entity';
       password: process.env.DB_PASSWORD || 'postgres',
       database: process.env.DB_NAME || 'acc_store',
       entities: [User, Product, File],
+      synchronize: true,
     }),
     AuthModule, 
     UsersModule, 
