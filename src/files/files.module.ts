@@ -4,6 +4,8 @@ import { FilesController } from './files.controller';
 
 import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { File } from './entities/file.entity';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
@@ -16,7 +18,8 @@ import { diskStorage } from 'multer';
           cb(null, fileName);
         }
       }),
-    })
+    }),
+    TypeOrmModule.forFeature([File])
   ],
   controllers: [FilesController],
   providers: [FilesService],

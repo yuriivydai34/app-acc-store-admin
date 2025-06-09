@@ -13,6 +13,7 @@ import { FilesModule } from './files/files.module';
 
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { File } from './files/entities/file.entity';
 
 @Module({
   imports: [
@@ -27,7 +28,7 @@ import { join } from 'path';
       username: 'postgres',
       password: 'example',
       database: 'mydb1',
-      entities: [User, Product],
+      entities: [User, Product, File],
       synchronize: true,
     }),
     AuthModule, 

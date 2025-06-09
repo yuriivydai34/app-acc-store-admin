@@ -14,11 +14,6 @@ export class FilesController {
     return this.filesService.handleFileUpload(file);
   }
 
-  @Post()
-  create(@Body() createFileDto: CreateFileDto) {
-    return this.filesService.create(createFileDto);
-  }
-
   @Get()
   findAll() {
     return this.filesService.findAll();

@@ -1,9 +1,17 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateFileDto } from './dto/create-file.dto';
 import { UpdateFileDto } from './dto/update-file.dto';
+import { File } from './entities/file.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class FilesService {
+  constructor(
+    @InjectRepository(File)
+    private fileRepository: Repository<File>,
+  ) { }
+
   handleFileUpload(file: Express.Multer.File) {
     if (!file) {
       throw new BadRequestException('no file uploaded');
@@ -21,16 +29,13 @@ export class FilesService {
       throw new BadRequestException('file is too large!');
     }
 
-    console.log('File uploaded:', file.originalname);
+    this.fileRepository.save({title: file.originalname, url: file.path});
 
     return { message: 'File uploaded successfully', filePath: file.path };
   }
-  create(createFileDto: CreateFileDto) {
-    return 'This action adds a new file';
-  }
 
   findAll() {
-    return `This action returns all files`;
+    return this.fileRepository.find();
   }
 
   findOne(id: number) {
