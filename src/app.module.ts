@@ -9,9 +9,17 @@ import { ProductModule } from './product/product.module';
 import { Product } from './product/entities/product.entity';
 import { UsersModule } from './users/users.module';
 import { User } from './users/entities/user.entity';
+import { FilesModule } from './files/files.module';
+
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'uploads'),
+      serveRoot: '/uploads', // This will serve files from the 'uploads' directory at the '/uploads' route
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -24,7 +32,7 @@ import { User } from './users/entities/user.entity';
     }),
     AuthModule, 
     UsersModule, 
-    ProductModule
+    ProductModule, FilesModule
   ],
   controllers: [AppController],
   providers: [
