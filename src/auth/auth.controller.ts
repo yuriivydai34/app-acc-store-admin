@@ -12,7 +12,10 @@ import {
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 import { Public } from './decorator';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { SignInDto } from './dto/signin.dto';
 
+@ApiBearerAuth()
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -20,7 +23,10 @@ export class AuthController {
   @Public()
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  signIn(@Body() signInDto: Record<string, any>) {
+  signIn(@Body() signInDto: SignInDto) {
+    if (!signInDto.username || !signInDto.password) {
+      throw new Error('Username and password are required');
+    }
     return this.authService.signIn(signInDto.username, signInDto.password);
   }
 
