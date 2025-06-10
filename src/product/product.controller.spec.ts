@@ -17,7 +17,7 @@ describe('ProductController', () => {
           useValue: {
             save: jest.fn(),
             find: jest.fn(),
-            findOneBy: jest.fn(),
+            findOne: jest.fn(),
             delete: jest.fn(),
             update: jest.fn(),
           },
