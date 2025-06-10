@@ -1,10 +1,13 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateFileDto } from './dto/create-file.dto';
 import { UpdateFileDto } from './dto/update-file.dto';
 import { File } from './entities/file.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Product } from 'src/product/entities/product.entity';
+
+import * as fs from 'fs/promises';
+import * as path from 'path';
 
 @Injectable()
 export class FilesService {
@@ -58,7 +61,30 @@ export class FilesService {
     return `This action updates a #${id} file`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} file`;
+  async remove(id: number) {
+    const file = await this.fileRepository.findOne({
+    where: { id }
+  });
+
+  if (!file) {
+    throw new NotFoundException(`File with ID ${id} not found`);
+  }
+
+  try {
+    // Delete the physical file
+    await fs.unlink(path.join(process.cwd(), file.url));
+
+    // Delete the database record
+    await this.fileRepository.remove(file);
+
+    return { message: `File ${file.title} has been deleted` };
+  } catch (error) {
+    // If file doesn't exist in filesystem, still delete from database
+    if (error.code === 'ENOENT') {
+      await this.fileRepository.remove(file);
+      return { message: `File record deleted, but file was not found in filesystem` };
+    }
+    throw error;
+  }
   }
 }
