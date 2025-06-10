@@ -6,6 +6,7 @@ import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { File } from './entities/file.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Product } from 'src/product/entities/product.entity';
 
 @Module({
   imports: [
@@ -19,7 +20,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         }
       }),
     }),
-    TypeOrmModule.forFeature([File])
+    TypeOrmModule.forFeature([File, Product])
   ],
   controllers: [FilesController],
   providers: [FilesService],

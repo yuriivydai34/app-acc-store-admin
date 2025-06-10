@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { File } from 'src/files/entities/file.entity';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 
 @Entity()
 export class Product {
@@ -10,6 +11,9 @@ export class Product {
 
   @Column()
   description: string;
+
+  @OneToMany(() => File, (file) => file.product)
+  files: File[];
 
   @CreateDateColumn()
   createdAt: Date;

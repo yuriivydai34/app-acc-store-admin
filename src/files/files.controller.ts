@@ -3,15 +3,31 @@ import { FilesService } from './files.service';
 import { CreateFileDto } from './dto/create-file.dto';
 import { UpdateFileDto } from './dto/update-file.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 
 @Controller('files')
 export class FilesController {
   constructor(private readonly filesService: FilesService) { }
 
-  @Post('upload')
+  @Post('upload/:productId')
   @UseInterceptors(FileInterceptor('file'))
-  uploadFile(@UploadedFile() file: Express.Multer.File) {
-    return this.filesService.handleFileUpload(file);
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  uploadFile(
+    @UploadedFile() file: Express.Multer.File,
+    @Param('productId') productId: string,
+  ) {
+    return this.filesService.handleFileUpload(file, +productId);
   }
 
   @Get()

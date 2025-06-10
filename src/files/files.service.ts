@@ -4,15 +4,22 @@ import { UpdateFileDto } from './dto/update-file.dto';
 import { File } from './entities/file.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Product } from 'src/product/entities/product.entity';
 
 @Injectable()
 export class FilesService {
   constructor(
     @InjectRepository(File)
     private fileRepository: Repository<File>,
+    @InjectRepository(Product)
+    private productRepository: Repository<Product>,
   ) { }
 
-  handleFileUpload(file: Express.Multer.File) {
+  async handleFileUpload(file: Express.Multer.File, productId: number) {
+    const product = await this.productRepository.findOneOrFail({
+      where: { id: productId },
+    });
+
     if (!file) {
       throw new BadRequestException('no file uploaded');
     }
@@ -29,9 +36,14 @@ export class FilesService {
       throw new BadRequestException('file is too large!');
     }
 
-    this.fileRepository.save({title: file.originalname, url: file.path});
+    const fileEntity = new File();
+    fileEntity.title = file.originalname;
+    fileEntity.mimetype = file.mimetype;
+    fileEntity.size = file.size;
+    fileEntity.url = file.path;
+    fileEntity.product = product;
 
-    return { message: 'File uploaded successfully', filePath: file.path };
+    return this.fileRepository.save(fileEntity);
   }
 
   findAll() {
