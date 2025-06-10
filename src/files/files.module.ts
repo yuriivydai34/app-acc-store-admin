@@ -7,6 +7,9 @@ import { diskStorage } from 'multer';
 import { File } from './entities/file.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Product } from 'src/product/entities/product.entity';
+import { ServeStaticModule } from '@nestjs/serve-static';
+
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -19,6 +22,10 @@ import { Product } from 'src/product/entities/product.entity';
           cb(null, fileName);
         }
       }),
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(process.cwd(), 'uploads'),
+      serveRoot: '/uploads',
     }),
     TypeOrmModule.forFeature([File, Product])
   ],

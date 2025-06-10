@@ -36,8 +36,8 @@ RUN npm install --only=production
 # Copy the entire dist directory
 COPY --from=builder /usr/src/app/dist ./dist
 
-# Create uploads directory
-RUN mkdir -p uploads
+# Create uploads directory with proper permissions
+RUN mkdir -p uploads && chmod 777 uploads
 
 # Copy tsconfig.json
 COPY --from=builder /usr/src/app/tsconfig.json ./

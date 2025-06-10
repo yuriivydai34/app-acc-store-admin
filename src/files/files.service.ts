@@ -16,7 +16,20 @@ export class FilesService {
     private fileRepository: Repository<File>,
     @InjectRepository(Product)
     private productRepository: Repository<Product>,
-  ) { }
+  ) {
+    // Ensure uploads directory exists
+    this.ensureUploadsDirectory();
+  }
+
+
+  private async ensureUploadsDirectory() {
+    const uploadsPath = path.join(process.cwd(), 'uploads');
+    try {
+      await fs.access(uploadsPath);
+    } catch {
+      await fs.mkdir(uploadsPath, { recursive: true });
+    }
+  }
 
   async handleFileUpload(file: Express.Multer.File, productId: number) {
     const product = await this.productRepository.findOneOrFail({
@@ -43,7 +56,7 @@ export class FilesService {
     fileEntity.title = file.originalname;
     fileEntity.mimetype = file.mimetype;
     fileEntity.size = file.size;
-    fileEntity.url = file.path;
+    fileEntity.url = `/uploads/${file.filename}`;
     fileEntity.product = product;
 
     return this.fileRepository.save(fileEntity);
