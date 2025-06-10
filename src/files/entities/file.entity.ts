@@ -12,7 +12,7 @@ export class File {
   @Column()
   url: string;
 
-  @ManyToOne(() => Product, (product) => product.files)
+  @ManyToOne(() => Product, (product) => product.files, { onDelete: 'CASCADE' })
   @JoinColumn()
   product: Product;
 
