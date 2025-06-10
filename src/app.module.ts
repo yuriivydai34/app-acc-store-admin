@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
@@ -17,6 +19,7 @@ import { File } from './files/entities/file.entity';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(), // Load environment variables from .env file
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'uploads'),
       serveRoot: '/uploads', // This will serve files from the 'uploads' directory at the '/uploads' route
@@ -26,8 +29,8 @@ import { File } from './files/entities/file.entity';
       host: process.env.DB_HOST || 'postgres',
       port: parseInt(process.env.DB_PORT || '5432'),
       username: process.env.DB_USERNAME || 'postgres',
-      password: process.env.DB_PASSWORD || 'postgres',
-      database: process.env.DB_NAME || 'acc_store',
+      password: process.env.DB_PASSWORD || 'example',
+      database: process.env.DB_NAME || 'mydb1',
       entities: [User, Product, File],
       synchronize: true,
     }),
