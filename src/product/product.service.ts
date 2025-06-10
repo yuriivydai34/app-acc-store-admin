@@ -17,11 +17,20 @@ export class ProductService {
   }
 
   findAll(): Promise<Product[]> {
-    return this.productRepository.find();
+    return this.productRepository.find({
+      relations: {
+        files: true
+      }
+    });
   }
 
   findOne(id: number): Promise<Product | null> {
-    return this.productRepository.findOneBy({ id });
+    return this.productRepository.findOne({
+      where: { id },
+      relations: {
+        files: true
+      }
+    });
   }
 
   async remove(id: number): Promise<void> {
