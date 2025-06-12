@@ -3,6 +3,7 @@ import { OrderController } from './order.controller';
 import { OrderService } from './order.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Order } from './entities/order.entity';
+import { Product } from '../product/entities/product.entity';
 
 describe('OrderController', () => {
   let controller: OrderController;
@@ -20,6 +21,13 @@ describe('OrderController', () => {
             save: jest.fn(),
             update: jest.fn(),
             delete: jest.fn(),
+            create: jest.fn(),
+          },
+        },
+        {
+          provide: getRepositoryToken(Product),
+          useValue: {
+            findOne: jest.fn(),
           },
         },
       ],
