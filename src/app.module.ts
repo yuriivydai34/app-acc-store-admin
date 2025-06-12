@@ -16,6 +16,10 @@ import { FilesModule } from './files/files.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { File } from './files/entities/file.entity';
+import { OrderModule } from './order/order.module';
+import { Order } from './order/entities/order.entity';
+import { CashReceiptModule } from './cash-receipt/cash-receipt.module';
+import { CashReceipt } from './cash-receipt/entities/cash-receipt.entity';
 
 @Module({
   imports: [
@@ -37,12 +41,12 @@ import { File } from './files/entities/file.entity';
       username: process.env.DB_USERNAME || 'postgres',
       password: process.env.DB_PASSWORD || 'postgres',
       database: process.env.DB_NAME || 'acc_store',
-      entities: [User, Product, File],
+      entities: [User, Product, File, Order, CashReceipt],
       synchronize: process.env.NODE_ENV !== 'production',
     }),
     AuthModule, 
     UsersModule, 
-    ProductModule, FilesModule
+    ProductModule, FilesModule, OrderModule, CashReceiptModule
   ],
   controllers: [AppController],
   providers: [

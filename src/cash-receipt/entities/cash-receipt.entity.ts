@@ -1,25 +1,12 @@
 import { Order } from 'src/order/entities/order.entity';
-import { File } from '../../files/entities/file.entity';
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 
 @Entity()
-export class Product {
+export class CashReceipt {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  title: string;
-
-  @Column()
-  description: string;
-
-  @Column()
-  price: number;
-
-  @OneToMany(() => File, (file) => file.product)
-  files: File[];
-
-  @OneToMany(() => Order, (order) => order.product)
+  @OneToMany(() => Order, (order) => order.cashReceipt)
   orders: Order[];
 
   @CreateDateColumn()
