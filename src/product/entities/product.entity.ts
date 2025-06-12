@@ -1,4 +1,4 @@
-import { Order } from 'src/order/entities/order.entity';
+import { Order } from '../../order/entities/order.entity';
 import { File } from '../../files/entities/file.entity';
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 

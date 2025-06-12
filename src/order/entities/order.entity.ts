@@ -1,5 +1,5 @@
-import { CashReceipt } from 'src/cash-receipt/entities/cash-receipt.entity';
-import { Product } from 'src/product/entities/product.entity';
+import { CashReceipt } from '../../cash-receipt/entities/cash-receipt.entity';
+import { Product } from '../../product/entities/product.entity';
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany, OneToOne, ManyToOne } from 'typeorm';
 
 @Entity()
