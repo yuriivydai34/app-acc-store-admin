@@ -9,6 +9,9 @@ export class CashReceipt {
   @OneToMany(() => Order, (order) => order.cashReceipt)
   orders: Order[];
 
+  @Column()
+  totalAmount: number;
+
   @CreateDateColumn()
   createdAt: Date;
 

@@ -5,6 +5,7 @@ import { CreateCashReceiptDto } from './dto/create-cash-receipt.dto';
 import { UpdateCashReceiptDto } from './dto/update-cash-receipt.dto';
 import { CashReceipt } from './entities/cash-receipt.entity';
 import { Order } from '../order/entities/order.entity';
+import { In } from 'typeorm';
 
 @Injectable()
 export class CashReceiptService {
@@ -19,8 +20,17 @@ export class CashReceiptService {
     const cashReceipt = this.cashReceiptRepository.create();
     
     if (createCashReceiptDto.orders) {
-      const orders = await this.orderRepository.findByIds(createCashReceiptDto.orders);
+      const orders = await this.orderRepository.find({
+        where: { id: In(createCashReceiptDto.orders) },
+        relations: ['product'],
+      });
       cashReceipt.orders = orders;
+      cashReceipt.totalAmount = orders.reduce((acc, order) => {
+        if (!order.product) {
+          throw new NotFoundException(`Product not found for order ${order.id}`);
+        }
+        return acc + order.product.price;
+      }, 0);
     }
 
     return this.cashReceiptRepository.save(cashReceipt);
@@ -28,14 +38,14 @@ export class CashReceiptService {
 
   findAll(): Promise<CashReceipt[]> {
     return this.cashReceiptRepository.find({
-      relations: ['orders'],
+      relations: ['orders', 'orders.product'],
     });
   }
 
   async findOne(id: number): Promise<CashReceipt> {
     const cashReceipt = await this.cashReceiptRepository.findOne({
       where: { id },
-      relations: ['orders'],
+      relations: ['orders', 'orders.product'],
     });
 
     if (!cashReceipt) {
@@ -48,7 +58,7 @@ export class CashReceiptService {
   async update(id: number, updateCashReceiptDto: UpdateCashReceiptDto): Promise<void> {
     const cashReceipt = await this.cashReceiptRepository.findOne({
       where: { id },
-      relations: ['orders'],
+      relations: ['orders', 'orders.product'],
     });
 
     if (!cashReceipt) {
@@ -56,8 +66,17 @@ export class CashReceiptService {
     }
 
     if (updateCashReceiptDto.orders) {
-      const orders = await this.orderRepository.findByIds(updateCashReceiptDto.orders);
+      const orders = await this.orderRepository.find({
+        where: { id: In(updateCashReceiptDto.orders) },
+        relations: ['product'],
+      });
       cashReceipt.orders = orders;
+      cashReceipt.totalAmount = orders.reduce((acc, order) => {
+        if (!order.product) {
+          throw new NotFoundException(`Product not found for order ${order.id}`);
+        }
+        return acc + order.product.price;
+      }, 0);
     }
 
     await this.cashReceiptRepository.save(cashReceipt);
